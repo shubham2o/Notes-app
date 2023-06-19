@@ -6,7 +6,7 @@ addBtn.addEventListener("click", () => {
 
 function addNewNote() {
     const notes = document.createElement('div');
-    notes.classList.add('notes',)
+    notes.classList.add("notes");
 
     notes.innerHTML = `
         <div class="notes">
