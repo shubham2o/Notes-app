@@ -35,8 +35,9 @@ function addNewNote() {
     })
 
     textArea.addEventListener("input", (e) => {
-        const { value } = e.target;
-        main.innerHTML = marked(value);
+        // const { value } = e.target;
+        // main.innerHTML = marked(value);
+        main.innerHTML = e.target.value;
     });
 
     document.body.appendChild(notes);
