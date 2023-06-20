@@ -1,44 +1,64 @@
-const addBtn = document.getElementById('add');
+const notes = JSON.parse(localStorage.getItem("notes"));
+if (notes) {
+    notes.forEach((note) => {
+        addNewNote(note);
+    });
+}
 
+const addBtn = document.getElementById("add");
 addBtn.addEventListener("click", () => {
     addNewNote();
 });
 
-function addNewNote() {
-    const notes = document.createElement('div');
-    notes.classList.add("notes");
+function addNewNote(text = "") {
+    const note = document.createElement("div");
+    note.classList.add("note");
 
-    notes.innerHTML = `
+    note.innerHTML = `
         <div class="notes">
             <div class="tools">
                 <button class="edit"><i class="fas fa-edit"></i></button>
                 <button class="delete"><i class="fas fa-trash-alt"></i></button>
             </div>
-            <div class="main hidden"></div>
-            <textarea></textarea>
+            <div class="main ${text ? "" : "hidden"}"></div>
+            <textarea class="${text ? "hidden" : ""}"></textarea>
         </div>
     `;
 
-    const editBtn = notes.querySelector(".edit");
-    const deleteBtn = notes.querySelector(".delete");
+    const editBtn = note.querySelector(".edit");
+    const deleteBtn = note.querySelector(".delete");
+    const main = note.querySelector(".main");
+    const textArea = note.querySelector("textarea");
 
-    const main = notes.querySelector(".main");
-    const textArea = notes.querySelector("textarea");
+    textArea.value = text;
+    main.innerHTML = marked(text);
 
     editBtn.addEventListener("click", () => {
         main.classList.toggle("hidden");
-        textArea.classList.toggle('hidden');
+        textArea.classList.toggle("hidden");
     });
 
     deleteBtn.addEventListener("click", () => {
-        notes.remove("");
-    })
-
-    textArea.addEventListener("input", (e) => {
-        // const { value } = e.target;
-        // main.innerHTML = marked(value);
-        main.innerHTML = e.target.value;
+        note.remove();
+        updateLS();
     });
 
-    document.body.appendChild(notes);
+    textArea.addEventListener("input", (e) => {
+        const { value } = e.target;
+        main.innerHTML = marked(value);
+        updateLS();
+    });
+
+    document.body.appendChild(note);
+}
+
+function updateLS() {
+    const notesText = document.querySelectorAll("textarea");
+    const notes = [];
+
+    notesText.forEach((note) => {
+        notes.push(note.value);
+    });
+
+    localStorage.setItem("notes", JSON.stringify(notes));
 }
